@@ -1,8 +1,12 @@
 <template >
   <div class="about-container">
-    <Header />
+    <div class="container-left">
+      <Header />
+      <el-card>
+        <router-view></router-view>
+      </el-card>
+    </div>
     <div class="container">
-      <router-view></router-view>
       <div class="aside">
         <ArticleSearch />
         <Aside />
@@ -57,10 +61,30 @@ export default {
 </script>
 
 <style lang="less">
+.el-card {
+  flex: 6;
+  margin: 0 15px;
+  padding: 0;
+  border-radius: 10px !important;
+
+  .el-card__body {
+    padding: 0 !important;
+  }
+}
+
 .about-container {
-  margin: 30px auto;
+  display: flex;
+  justify-content: space-between;
+  margin: 30px;
   position: relative;
-  max-width: 1240px;
+
+  .container-left {
+    flex: 7;
+  }
+
+  .container {
+    flex: 2;
+  }
 }
 
 .container {
@@ -79,13 +103,14 @@ export default {
 .aside {
   flex: 2;
   position: sticky;
-  top: 20px;
+  top: 45px;
   left: 0;
   height: fit-content;
 }
+
 .live {
   position: fixed;
   top: 60vh;
-  left: 0;
+  right: 0;
 }
 </style>

@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import { Dialog, Card, Tabs, TabPane, Menu, MenuItem, Form, FormItem, Button, Input, Message, Backtop, Checkbox, Radio, RadioGroup, Upload } from "element-ui"
+import { Dialog, Card, Tabs, TabPane, Menu, MenuItem, Form, FormItem, Button, Input, Message, Backtop, Checkbox, Radio, RadioGroup, Upload ,Tooltip} from "element-ui"
 
 Vue.use(Dialog)
 Vue.use(Card)
@@ -20,6 +20,7 @@ Vue.use(Checkbox)
 Vue.use(Radio)
 Vue.use(RadioGroup)
 Vue.use(Upload)
+Vue.use(Tooltip)
 Vue.prototype.$message = Message
 
 

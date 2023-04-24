@@ -7,8 +7,13 @@ export default {
     },
     getters: {
         articles(state) {
-            return state.articleList?.slice(0, 3)
-        }
+            return state.articleList?.slice(0, 5)
+        },
+        // sclieArticles(state) {
+        //     return function (num = 5) {
+        //         return state.articleList?.slice(0, num)
+        //     }
+        // }
     },
     mutations: {
         GETARTICLES(state, data) {

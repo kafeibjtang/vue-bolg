@@ -1,65 +1,43 @@
 <template>
   <div class="article-data">
-    <el-card>
-      <div class="separate">
-        <h1>文章详情</h1>
-        <span class="sub-separate">BlogView </span>
+    <div class="separate">
+      <h1>文章详情</h1>
+      <span class="sub-separate">BlogView </span>
+    </div>
+    <div class="post-box">
+      <h1 class="post-title">{{ articleData.title }}</h1>
+      <div class="post-time">
+        <span><i class="el-icon-time"></i>{{ articleData.date }}</span>
+        <span><i class="el-icon-document"></i>{{ articleData.column?.name }}</span>
       </div>
-      <div class="post-box">
-        <h1 class="post-title">{{ articleData.title }}</h1>
-        <div class="post-time">
-          <span><i class="el-icon-time"></i>{{ articleData.date }}</span>
-          <span
-            ><i class="el-icon-document"></i
-            >{{ articleData.column?.name }}</span
-          >
-        </div>
-        <div class="post-body">
-          <div v-html="articleData.detailed" class="post-detailed"></div>
-          <div class="post-footer">
-            <div class="post-footer-tags">
-              <i
-                class="el-icon-edit-outline"
-                style="color: orangered; margin-right: 5px"
-              >
-              </i>
-              <span style="font-size: 14px">笔记<!----></span>
-            </div>
-            <div class="post-footer-tags">
-              <i
-                class="el-icon-user"
-                style="color: orangered; margin-right: 5px"
-              >
-              </i>
-              <span style="font-size: 14px"
-                >作者：{{ articleData.writer?.nickname }}</span
-              >
-            </div>
+      <div class="post-body">
+        <div v-html="articleData.detailed" class="post-detailed"></div>
+        <div class="post-footer">
+          <div class="post-footer-tags">
+            <i class="el-icon-edit-outline" style="color: orangered; margin-right: 5px">
+            </i>
+            <span style="font-size: 14px">笔记<!----></span>
+          </div>
+          <div class="post-footer-tags">
+            <i class="el-icon-user" style="color: orangered; margin-right: 5px">
+            </i>
+            <span style="font-size: 14px">作者：{{ articleData.writer?.nickname }}</span>
           </div>
         </div>
-        <div class="post-hit_num">
-          <p><i class="el-icon-view"></i>{{ articleData.hit_num }}</p>
-          <p>
-            <i
-              class="el-icon-star-off"
-              :class="{ active: isLike }"
-              @click="likeArticle()"
-            ></i>
-            {{ likeNums }}
-          </p>
-          <p>
-            <i class="el-icon-chat-dot-round"></i
-            >{{ articleData.comments?.length }}
-          </p>
-        </div>
       </div>
-      <Comments
-        :comments="articleData.comments"
-        :articleId="articleData.id"
-        @upData="getArticleDetails(articleData.id)"
-      />
-      <Footer />
-    </el-card>
+      <div class="post-hit_num">
+        <p><i class="el-icon-view"></i>{{ articleData.hit_num }}</p>
+        <p>
+          <i class="el-icon-star-off" :class="{ active: isLike }" @click="likeArticle()"></i>
+          {{ likeNums }}
+        </p>
+        <p>
+          <i class="el-icon-chat-dot-round"></i>{{ articleData.comments?.length }}
+        </p>
+      </div>
+    </div>
+    <Comments :comments="articleData.comments" :articleId="articleData.id" @upData="getArticleDetails(articleData.id)" />
+    <Footer />
   </div>
 </template>
 
@@ -137,103 +115,74 @@ export default {
   flex: 6;
   margin: 0 15px;
 
-  /deep/.el-card__body {
-    padding: 0 !important;
+  .active {
+    color: #f5651e;
   }
 
-  .el-card {
-    border-radius: 10px !important;
+  .post-box {
+    padding: 20px;
+    position: relative;
 
-    .active {
-      color: #f5651e;
+    .post-title {
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: 700;
+      font-size: 20px;
     }
 
-    .post-box {
+    .post-time {
+      text-align: center;
+      color: #8697a8;
+      font-size: 14px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      span {
+        margin: 10px;
+
+        i {
+          margin-right: 5px;
+        }
+      }
+    }
+
+    .post-body {
+      color: #3c4e64;
+      word-break: break-word;
+      font-size: 16px;
+      word-spacing: 10px;
+      font-family: Trebuchet MS, Lucida Sans Unicode, Lucida Grande,
+        Lucida Sans, Arial, sans-serif;
+      text-indent: 2em;
       padding: 20px;
+    }
+
+    .post-footer {
+      margin-bottom: 2rem;
+      margin-top: 2rem;
+      padding-top: 2rem;
       position: relative;
+      display: flex;
+      justify-content: space-between;
 
-      .post-title {
-        text-align: center;
-        margin-bottom: 10px;
-        font-weight: 700;
-        font-size: 20px;
+      &::before {
+        content: "";
+        background-color: #f5651e;
+        height: 1px;
+        margin: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 30%;
       }
 
-      .post-time {
-        text-align: center;
-        color: #8697a8;
-        font-size: 14px;
-        text-transform: uppercase;
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        span {
-          margin: 10px;
-
-          i {
-            margin-right: 5px;
-          }
-        }
-      }
-
-      .post-body {
-        color: #3c4e64;
-        word-break: break-word;
-        font-size: 16px;
-        word-spacing: 10px;
-        font-family: Trebuchet MS, Lucida Sans Unicode, Lucida Grande,
-          Lucida Sans, Arial, sans-serif;
-        text-indent: 2em;
-
-        .post-img {
-          box-sizing: border-box;
-          text-align: center;
-          margin-bottom: 20px;
-          padding: 20px;
-        }
-      }
-
-      .post-footer {
-        margin-bottom: 2rem;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        position: relative;
-        display: flex;
-        justify-content: space-between;
-
-        &::before {
-          content: "";
-          background-color: #f5651e;
-          height: 1px;
-          margin: auto;
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          width: 30%;
-        }
-
-        .post-footer-tags {
-          padding-top: 20px;
-          text-indent: 0;
-        }
-      }
-
-      .post-hit_num {
-        display: flex;
-        justify-content: right;
-
-        p {
-          margin: 0 10px;
-          color: #3c4e64;
-          font-size: 16px;
-
-          i {
-            margin-right: 5px;
-          }
-        }
+      .post-footer-tags {
+        padding-top: 20px;
+        text-indent: 0;
       }
     }
 
@@ -251,34 +200,49 @@ export default {
         }
       }
     }
+  }
 
-    .separate {
+  .post-hit_num {
+    display: flex;
+    justify-content: right;
+
+    p {
+      margin: 0 10px;
+      color: #3c4e64;
+      font-size: 16px;
+
+      i {
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .separate {
+    position: relative;
+    padding: 10px;
+
+    h1 {
+      font-size: 30px;
       position: relative;
-      padding: 10px;
+      font-weight: 700;
+      color: #44566c;
 
-      h1 {
-        font-size: 30px;
-        position: relative;
-        font-weight: 700;
-        color: #44566c;
-
-        &::after {
-          content: "";
-          position: absolute;
-          bottom: -24px;
-          left: 0;
-          width: 10%;
-          border-bottom: 4px solid #f56525;
-          border-radius: 2px;
-        }
-      }
-
-      .sub-separate {
+      &::after {
+        content: "";
         position: absolute;
-        bottom: -10px;
-        left: 12px;
-        color: #d7d7d7;
+        bottom: -24px;
+        left: 0;
+        width: 10%;
+        border-bottom: 4px solid #f56525;
+        border-radius: 2px;
       }
+    }
+
+    .sub-separate {
+      position: absolute;
+      bottom: -10px;
+      left: 12px;
+      color: #d7d7d7;
     }
   }
 }

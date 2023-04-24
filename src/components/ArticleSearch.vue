@@ -36,8 +36,10 @@ export default {
   margin-bottom: 15px;
 
   /deep/.el-input__inner {
+    border: none;
+
     &:focus {
-      border: 1px solid #ccc;
+      border: none;
     }
   }
 }

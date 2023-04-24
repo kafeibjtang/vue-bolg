@@ -48,6 +48,14 @@ const routes = [
     }
   },
   {
+    path: "/socket",
+    name: "Socket",
+    component: () => import("@/views/Socket"),
+    meta: {
+      title: "Mr.Xiao | 聊天室"
+    }
+  },
+  {
     path: "/user",
     name: "User",
     component: () => import("@/views/UserInfo"),
@@ -63,13 +71,10 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.path === "/compiler" || to.path ==="/user") {
+  if (to.path === "/compiler") {
     let token = sessionStorage.getItem("token")
-    if (token) {
-      next()
-    } else {
-      Message.error("请先登录哦~")
-      next(from.path)
+    if (!token) {
+      Message.warning("登录后才能发表文章哦~")
     }
   }
   next()

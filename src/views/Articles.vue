@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <div>
     <div class="separate">
       <h1>文章分类</h1>
       <span class="sub-separate">BlogClassify </span>
@@ -41,13 +41,19 @@
         </div>
         <ArticleList v-else :articleslist="articleList" :maxWidth="'280px'" />
       </div>
+      <div class="load-btn">
+        <span class="oButton">
+          <i class="el-icon-s-promotion" style="margin-right: 10px"></i> Send
+          Article
+        </span>
+      </div>
     </div>
     <Footer />
-  </el-card>
+  </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import ArticleList from "@/components/ArticleList.vue";
 import Footer from '@/components/Footer.vue';
 import qs from "qs";
@@ -57,7 +63,9 @@ export default {
     return {
       columns: [],
       idx: "1",
-      q: ""
+      q: "",
+      scliceArticlesLits: [],
+      sliceNum: 1
     };
   },
   components: {
@@ -133,10 +141,12 @@ export default {
         data.query = qs.stringify(query)
       }
       this.getSearchValue(data)
-    }
+    },
+
   },
   computed: {
     ...mapState("article", ["articleList"]),
+    ...mapGetters("article", ["sclieArticles"]),
   },
   watch: {
     "$route.query.val"(val) {
@@ -150,99 +160,119 @@ export default {
 </script>
 
 <style scoped lang="less">
-.el-card {
-  flex: 6;
-  margin: 0 15px;
-  border-radius: 10px !important;
+.separate {
+  position: relative;
+  padding: 10px;
+  margin-bottom: 30px;
 
-  /deep/.el-card__body {
-    padding: 0 !important;
-  }
-
-  .separate {
+  h1 {
+    font-size: 30px;
     position: relative;
-    padding: 10px;
-    margin-bottom: 30px;
+    font-weight: 700;
+    color: #44566c;
 
-    h1 {
-      font-size: 30px;
-      position: relative;
-      font-weight: 700;
-      color: #44566c;
-
-      &::after {
-        content: "";
-        position: absolute;
-        bottom: -24px;
-        left: 0;
-        width: 15%;
-        border-bottom: 4px solid #f56525;
-        border-radius: 2px;
-      }
-    }
-
-    .sub-separate {
+    &::after {
+      content: "";
       position: absolute;
-      bottom: -10px;
-      left: 12px;
-      color: #d7d7d7;
+      bottom: -24px;
+      left: 0;
+      width: 15%;
+      border-bottom: 4px solid #f56525;
+      border-radius: 2px;
     }
   }
 
-  .articles-colunm-tabs {
+  .sub-separate {
+    position: absolute;
+    bottom: -10px;
+    left: 12px;
+    color: #d7d7d7;
+  }
+}
+
+.articles-colunm-tabs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 25px;
+
+  .articles-colunm-list {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 10px 25px;
 
-    .articles-colunm-list {
+    span {
+      padding: 5px 15px;
+      cursor: pointer;
+      color: #44566c;
+      font-size: 16px;
+    }
+
+    ul {
       display: flex;
-      align-items: center;
+      box-sizing: border-box;
+      flex-wrap: wrap;
 
-      span {
+      li {
         padding: 5px 15px;
         cursor: pointer;
         color: #44566c;
         font-size: 16px;
       }
-
-      ul {
-        display: flex;
-        box-sizing: border-box;
-        flex-wrap: wrap;
-
-        li {
-          padding: 5px 15px;
-          cursor: pointer;
-          color: #44566c;
-          font-size: 16px;
-        }
-      }
     }
   }
+}
 
-  .tabs-active {
-    color: orangered !important;
+.tabs-active {
+  color: orangered !important;
+}
+
+.article-box {
+  padding: 20px;
+  display: flex;
+}
+
+.listBoxShow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  min-height: 480px;
+
+  a {
+    margin: 0 10px;
   }
-
-  .article-box {
-    padding: 20px;
-    display: flex;
-  }
-
-  .listBoxShow {
+}
+.load-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  .oButton {
+    background-image: linear-gradient(
+      to right,
+      #f62d12 0%,
+      #f58c7e 50%,
+      #f62d12 100%
+    );
+    background-size: 200% auto;
+    border-radius: 30px;
+    border: 0;
+    box-shadow: 0 3px 35px #f62d1233, 0 8px 16px #f62d1226;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: inherit;
+    white-space: nowrap;
+    padding: 10px 20px;
+    margin: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
-    font-size: 20px;
-    font-weight: 700;
-    text-align: center;
-    min-height: 480px;
-
-    a {
-      margin: 0 10px;
-    }
+    width: 100px;
   }
 }
 </style>

@@ -10,7 +10,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     isLogin: false,
-    nickname: sessionStorage.getItem('nickname') || '',
+    nickname: sessionStorage.getItem('nickname') || undefined,
   },
   getters: {
   },
@@ -19,6 +19,11 @@ export default new Vuex.Store({
       state.isLogin = !state.isLogin
       state.nickname = data
     },
+    LOGOUT(state) {
+      sessionStorage.clear()
+      state.isLogin = false
+      state.nickname = ""
+    }
   },
   actions: {
     async login({ commit }, data) {

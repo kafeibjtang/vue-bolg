@@ -1,5 +1,5 @@
 <template>
-  <el-card class="box-card-conent">
+  <div class="box-card-conent">
     <div class="separate">
       <h1>关于我</h1>
       <span class="sub-separate">Abuot</span>
@@ -296,7 +296,7 @@
       </section>
     </main>
     <Footer />
-  </el-card>
+  </div>
 </template>
 
 <script>
@@ -325,10 +325,7 @@ export default {
 }
 
 .box-card-conent {
-  flex: 6;
   background-color: #fff;
-  margin: 0 15px;
-  border-radius: 0.937rem;
   overflow: hidden;
 
   .separate {

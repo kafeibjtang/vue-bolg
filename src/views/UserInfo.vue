@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <div>
     <div class="separate">
       <h1>个人中心</h1>
       <span class="sub-separate">PersonalCenter </span>
@@ -69,7 +69,7 @@
         <el-button type="primary" @click="putUserInfo">确 定</el-button>
       </span>
     </el-dialog>
-  </el-card>
+  </div>
 </template>
 
 <script>
@@ -99,6 +99,10 @@ export default {
   methods: {
     //获取用户信息
     async getUser() {
+      if (!sessionStorage.getItem("token")) {
+        this.$message.error("请先登录")
+        return false
+      }
       try {
         let res = await getUserInfo()
         this.userInfo = res
@@ -109,6 +113,10 @@ export default {
     },
     //修改个人信息
     setInfo() {
+      if (!sessionStorage.getItem("token")) {
+        this.$message.error("请先登录")
+        return false
+      }
       this.dialogVisible = true
     },
     close() {
@@ -163,184 +171,174 @@ export default {
 </script>
 
 <style scoped lang="less">
-.el-card {
-  flex: 6;
-  margin: 0 15px;
-  border-radius: 10px !important;
+.separate {
+  position: relative;
+  padding: 10px;
+  margin-bottom: 30px;
 
-  /deep/.el-card__body {
-    padding: 0 !important;
+  h1 {
+    font-size: 30px;
+    position: relative;
+    font-weight: 700;
+    color: #44566c;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: -24px;
+      left: 0;
+      width: 15%;
+      border-bottom: 4px solid #f56525;
+      border-radius: 2px;
+    }
   }
 
-  .separate {
-    position: relative;
-    padding: 10px;
-    margin-bottom: 30px;
+  .sub-separate {
+    position: absolute;
+    bottom: -10px;
+    left: 12px;
+    color: #d7d7d7;
+  }
+}
 
-    h1 {
-      font-size: 30px;
-      position: relative;
-      font-weight: 700;
-      color: #44566c;
+.userInfo {
+  position: relative;
 
-      &::after {
-        content: "";
-        position: absolute;
-        bottom: -24px;
-        left: 0;
-        width: 15%;
-        border-bottom: 4px solid #f56525;
-        border-radius: 2px;
+  .userInfo-title {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    .userInfo-avatar {
+      border: 1px solid #ccc;
+
+      i {
+        &::before {
+          font-size: 100px;
+        }
+      }
+
+      img {
+        width: 100px;
+        height: 100px;
+        vertical-align: middle
       }
     }
 
-    .sub-separate {
+    .userInfo-set {
       position: absolute;
-      bottom: -10px;
-      left: 12px;
-      color: #d7d7d7;
+      top: 0;
+      right: 40px;
+      font-size: 14px;
+      cursor: pointer;
+
+      &:hover {
+        color: #f56525;
+      }
     }
-  }
 
-  .userInfo {
-    position: relative;
-
-    .userInfo-title {
-      padding: 20px;
+    .userInfo-name {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
+      font-size: 1rem;
+      padding: 10px 20px;
+      min-width: 100px;
+      text-align: center;
 
-      .userInfo-avatar {
-        border: 1px solid #ccc;
+      p {
+        padding: 0 10px;
+
+        em {
+          color: #f56525;
+          padding: 5px;
+          border-bottom: 1px solid #44566c;
+        }
 
         i {
-          &::before {
-            font-size: 100px;
-          }
-        }
-
-        img {
-          width: 100px;
-          height: 100px;
-          vertical-align: middle
-        }
-      }
-
-      .userInfo-set {
-        position: absolute;
-        top: 0;
-        right: 40px;
-        font-size: 14px;
-        cursor: pointer;
-
-        &:hover {
-          color: #f56525;
-        }
-      }
-
-      .userInfo-name {
-        display: flex;
-        font-size: 1rem;
-        padding: 10px 20px;
-        min-width: 100px;
-        text-align: center;
-
-        p {
-          padding: 0 10px;
-
-          em {
-            color: #f56525;
-            padding: 5px;
-            border-bottom: 1px solid #44566c;
-          }
-
-          i {
-            margin-right: 5px;
-          }
-        }
-      }
-
-      .userInfo-signature {
-        display: flex;
-        align-items: center;
-        margin-top: 20px;
-
-        p {
-          font-weight: 500;
-          font-size: 14px;
-          margin-top: 0;
-          color: #f56525;
+          margin-right: 5px;
         }
       }
     }
 
-    .userInfo-article {
+    .userInfo-signature {
       display: flex;
-      margin: 0 20px;
-      color: #44566c;
-      font-size: 16px;
-      border-top: 1px solid #f56525;
+      align-items: center;
+      margin-top: 20px;
 
-      .userInfo-articles,
-      .userInfo-comments {
-        padding: 20px;
-        min-height: 250px;
-
-        .sub-title {
-          color: #d7d7d7;
-        }
-      }
-
-      .userInfo-comments {
-        min-height: 50px;
+      p {
+        font-weight: 500;
+        font-size: 14px;
+        margin-top: 0;
+        color: #f56525;
       }
     }
   }
 
-  /deep/.el-dialog {
-    border-radius: 15px;
-
-    .el-dialog__header {
-      border-bottom: 1px solid #d9d9d9;
-    }
-  }
-
-  .setAvatar {
+  .userInfo-article {
     display: flex;
-    align-items: center;
+    margin: 0 20px;
+    color: #44566c;
+    font-size: 16px;
+    border-top: 1px solid #f56525;
 
-    p {
-      margin: 0 8px 0 15px;
+    .userInfo-articles,
+    .userInfo-comments {
+      padding: 20px;
+      min-height: 250px;
+
+      .sub-title {
+        color: #d7d7d7;
+      }
     }
 
-    /deep/ .avatar-uploader .el-upload {
-      border: 1px dashed #d9d9d9;
-      border-radius: 6px;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
+    .userInfo-comments {
+      min-height: 50px;
     }
+  }
+}
 
-    .avatar-uploader .el-upload:hover {
-      border-color: #409eff;
-    }
+/deep/.el-dialog {
+  border-radius: 15px;
 
-    .avatar-uploader-icon {
-      font-size: 28px;
-      color: #8c939d;
-      width: 100px;
-      height: 100px;
-      line-height: 100px;
-      text-align: center;
-    }
+  .el-dialog__header {
+    border-bottom: 1px solid #d9d9d9;
+  }
+}
 
-    .avatar {
-      width: 100px;
-      height: 100px;
-      display: block;
-    }
+.setAvatar {
+  display: flex;
+  align-items: center;
+
+  p {
+    margin: 0 8px 0 15px;
+  }
+
+  /deep/ .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .avatar-uploader .el-upload:hover {
+    border-color: #409eff;
+  }
+
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+  }
+
+  .avatar {
+    width: 100px;
+    height: 100px;
+    display: block;
   }
 }
 </style>
