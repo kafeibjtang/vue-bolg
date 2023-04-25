@@ -6,11 +6,7 @@
     </div>
     <div class="socke-msg-box" ref="scrollBox">
       <div>
-        <div
-          :class="`socke-msg-${chat.dis}`"
-          v-for="chat in chatList"
-          :key="chat.id"
-        >
+        <div :class="`socke-msg-${chat.dis}`" v-for="chat in chatList" :key="chat.id">
           <p class="msg-time">{{ chat.time }}</p>
           <span>
             <p class="msg-nickname" v-if="chat.dis === 'left'">
@@ -25,11 +21,7 @@
       </div>
     </div>
     <div class="socke-send">
-      <el-input
-        v-model="sendMsg"
-        placeholder="请输入内容"
-        @keyup.native.enter="sendChat"
-      ></el-input>
+      <el-input v-model="sendMsg" placeholder="请输入内容" @keyup.native.enter="sendChat"></el-input>
       <span class="oButton" @click="sendChat">
         <i class="el-icon-s-promotion" style="margin-right: 10px"></i> Send
         Message
@@ -204,9 +196,11 @@ export default {
       inset 0 0 10px rgba(255, 255, 255, 0.4);
     height: 500px;
     overflow: scroll;
+
     &::-webkit-scrollbar {
       display: none;
     }
+
     .socke-msg-left,
     .socke-msg-right,
     .socke-msg-center {
@@ -263,12 +257,10 @@ export default {
     }
 
     .oButton {
-      background-image: linear-gradient(
-        to right,
-        #f62d12 0%,
-        #f58c7e 50%,
-        #f62d12 100%
-      );
+      background-image: linear-gradient(to right,
+          #f62d12 0%,
+          #f58c7e 50%,
+          #f62d12 100%);
       background-size: 200% auto;
       border-radius: 30px;
       border: 0;

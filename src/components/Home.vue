@@ -80,15 +80,12 @@ export default {
 
   .container-left {
     flex: 7;
+    max-width: 1450px;
   }
 
   .container {
     flex: 2;
   }
-}
-
-.container {
-  display: flex;
 }
 
 .el-scrollbar__wrap {

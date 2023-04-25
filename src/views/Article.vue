@@ -28,7 +28,7 @@
       <div class="post-hit_num">
         <p><i class="el-icon-view"></i>{{ articleData.hit_num }}</p>
         <p>
-          <i class="el-icon-star-off" :class="{ active: isLike }" @click="likeArticle()"></i>
+          <i class="el-icon-star-off" :class="{ active: isLike }" @click="likeArticle"></i>
           {{ likeNums }}
         </p>
         <p>
@@ -66,7 +66,6 @@ export default {
         this.articleData = await getArticle(id);
         let uid = sessionStorage.getItem("uid")
         this.isLike = this.articleData.like_users?.includes(uid)
-
       } catch (error) {
         this.$message.error("获取文章失败");
         return Promise.reject(error);
@@ -81,7 +80,6 @@ export default {
         //10s内只触发一次点赞，防止多次请求
         this.time = setTimeout(async () => {
           await likes(this.id).then(() => {
-            console.log("11111");
             this.likeNum = 0
             this.getArticleDetails(this.id)
           })
@@ -112,7 +110,6 @@ export default {
 
 <style lang="less" scoped>
 .article-data {
-  flex: 6;
   margin: 0 15px;
 
   .active {
@@ -154,8 +151,8 @@ export default {
       word-break: break-word;
       font-size: 16px;
       word-spacing: 10px;
-      font-family: Trebuchet MS, Lucida Sans Unicode, Lucida Grande,
-        Lucida Sans, Arial, sans-serif;
+      font-family: Trebuchet MS, Lucida Sans Unicode, Lucida Grande, Lucida Sans,
+        Arial, sans-serif;
       text-indent: 2em;
       padding: 20px;
     }
