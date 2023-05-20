@@ -3,7 +3,7 @@ import JSEncrypt from "jsencrypt";
 import { Message } from "element-ui";
 
 const http = axios.create({
-    baseURL: '/api',
+    baseURL: 'http://111.230.17.116:3001/',
     timeout: 10000,
 });
 
@@ -44,7 +44,7 @@ http.interceptors.response.use(res => {
         sessionStorage.setItem("token", token)
         sessionStorage.setItem("nickname", nickname)
     }
-    return result.data? result.data:result;
+    return result.data ? result.data : result;
 }, err => {
     return Promise.reject(err)
 })

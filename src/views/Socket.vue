@@ -48,7 +48,7 @@ export default {
   },
   components: { Footer },
   created() {
-    this.ws = io("ws://127.0.0.1:8888", { transports: ['websocket'] })
+    this.ws = io("ws://111.230.17.116:3004", { transports: ['websocket'] })
     this.getUserInfo()
 
     //用户进入聊天室，把id和昵称带给服务器

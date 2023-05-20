@@ -47,21 +47,46 @@
       </div>
     </div>
     <Footer />
-    <el-dialog title="个人信息" :visible.sync="dialogVisible" :before-close="close" width="30%">
+    <el-dialog
+      title="个人信息"
+      :visible.sync="dialogVisible"
+      :before-close="close"
+      width="30%"
+    >
       <el-form ref="user" :model="userInfo" label-width="80px">
         <div class="setAvatar">
           <p>上传头像</p>
-          <el-upload class="avatar-uploader" ref="upload" action="http://127.0.0.1:3000/upload/user" :headers="headers"
-            :show-file-list="false" :on-success="handleAvatarSuccess" :on-error="handleAvatarError"
-            :before-upload="beforeAvatarUpload">
-            <img v-if="imageUrl ? imageUrl : userInfo.avatar" :src="imageUrl ? imageUrl : userInfo.avatar"
-              class="avatar" />
+          <el-upload
+            class="avatar-uploader"
+            ref="upload"
+            action="http://111.230.17.116:3000/upload/user"
+            :headers="headers"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :on-error="handleAvatarError"
+            :before-upload="beforeAvatarUpload"
+          >
+            <img
+              v-if="imageUrl ? imageUrl : userInfo.avatar"
+              :src="imageUrl ? imageUrl : userInfo.avatar"
+              class="avatar"
+            />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </div>
-        <el-form-item v-for="item in userFrom" :key="item.query" :label="item.label" :prop="item.query">
-          <el-input v-model="userInfo[item.query]" :type="item.type" :name="item.query" :placeholder="item.placeholder"
-            :disabled="item.readonly"></el-input>
+        <el-form-item
+          v-for="item in userFrom"
+          :key="item.query"
+          :label="item.label"
+          :prop="item.query"
+        >
+          <el-input
+            v-model="userInfo[item.query]"
+            :type="item.type"
+            :name="item.query"
+            :placeholder="item.placeholder"
+            :disabled="item.readonly"
+          ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -223,7 +248,7 @@ export default {
       img {
         width: 100px;
         height: 100px;
-        vertical-align: middle
+        vertical-align: middle;
       }
     }
 

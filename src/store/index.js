@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import modal from "./modules/modal"
-import article from "./modules/article"
 import { ResLogin, ResRegister } from "@/api"
 import { Message } from 'element-ui'
 
@@ -46,7 +45,6 @@ export default new Vuex.Store({
     },
   },
   modules: {
-    modal,
-    article
+    modal
   }
 })

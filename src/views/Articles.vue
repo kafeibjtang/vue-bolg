@@ -7,56 +7,68 @@
     <div class="articles-colunm">
       <div class="articles-colunm-tabs">
         <div class="articles-colunm-list">
-          <span @click="getArticlesList" :class="{ 'tabs-active': idx === '1' }">全部</span>
+          <span @click="getArticlesList" :class="{ 'tabs-active': idx === '1' }"
+            >全部</span
+          >
           <ul>
-            <li v-for="item in columns" :class="{ 'tabs-active': item.id === idx }" :key="item.id"
-              @click="columnList(item.id)">
+            <li
+              v-for="item in columns"
+              :class="{ 'tabs-active': item.id === idx }"
+              :key="item.id"
+              @click="columnList(item.id)"
+            >
               {{ item.name }}
             </li>
           </ul>
         </div>
         <el-button type="primary" icon="el-icon-plus" round @click="addColumns">
-          添加分类</el-button>
+          添加分类</el-button
+        >
       </div>
       <div class="articles-colunm-content">
         <div v-if="articleList.length === 0" class="listBoxShow">
           当前分类没有文章
-          <router-link :to="{
+          <router-link
+            :to="{
               name: 'Compiler',
               params: {
                 id: idx,
               },
-            }">去写一篇</router-link>
+            }"
+            >去写一篇</router-link
+          >
           吗？
         </div>
         <ArticleList v-else :articleslist="articleList" :maxWidth="'280px'" />
       </div>
-      <!-- 原本想实现一下懒加载但是没有特别好的思路 -->
-      <!-- <div class="load-btn">
-        <span class="oButton">
+      <div v-if="idx === '1'" class="load-btn" @click="Loadmore">
+        <span class="oButton" v-if="isShow">
           <i class="el-icon-s-promotion" style="margin-right: 10px"></i> Send
           Article
         </span>
-      </div> -->
+        <span class="oButton" v-else> 没有更多啦... </span>
+      </div>
     </div>
     <Footer />
   </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
 import ArticleList from "@/components/ArticleList.vue";
 import Footer from '@/components/Footer.vue';
 import qs from "qs";
-import { getColumns, getSearchData } from "@/api";
+import { getColumns, getSearchData, getArticleList, getcolumnList } from "@/api";
 export default {
   data() {
     return {
       columns: [],
       idx: "1",
       q: "",
-      scliceArticlesLits: [],
-      sliceNum: 1
+      isShow: true,
+      articleList: [],
+      size: 10,
+      page: 1,
+      total: 10
     };
   },
   components: {
@@ -76,35 +88,48 @@ export default {
       return false
     }
     //初始化获取全部文章
-    this.$store.dispatch("article/getArticles")
+    this.getArticlesList()
   },
 
   methods: {
     //获取分类列表
     async getColumnsList(id) {
       try {
-        let { list } = await getColumns();
-        this.columns = list;
+        let data = await getColumns();
+        this.columns = data;
         //如果有id则重新获取当前分类、文章
         if (id) {
           this.columnList(id)
         }
       } catch (error) {
-        this.$message.error(error.response.data.message);
         return Promise.reject(error);
       }
     },
     //获取当前分类的文章列表
     async columnList(id) {
       this.idx = id
-      this.$store.dispatch("article/getColumnsArticle", id);
+      try {
+        let { aids } = await getcolumnList(id)
+        this.articleList = aids
+        this.page = 1
+        this.size = 10
+        this.isShow = true
+      } catch (error) {
+        this.$message.error(error)
+      }
     },
     //获取全部文章
-    getArticlesList() {
-      this.$store.dispatch("article/getArticles").then(() => {
+    async getArticlesList() {
+      try {
+        let data = await getArticleList({ params: { size: this.size, page: this.page } })
+        this.articleList = data.list
+        this.page = 1
+        this.size = 10
+        this.total = data.total
         this.idx = "1"
-      })
-
+      } catch (error) {
+        this.$message.error(error)
+      }
     },
     //添加分类
     addColumns() {
@@ -118,9 +143,14 @@ export default {
     },
     //获取搜索文章
     async getSearchValue(data) {
-      this.idx = "1"
+      this.idx = "0"
+      if (!this.isShow) {
+        this.isShow = true
+      }
       await getSearchData(qs.stringify(data)).then((res) => {
-        this.$store.commit("article/GETARTICLES", res.list)
+        this.page = 1
+        this.size = 10
+        this.articleList = res.list
       })
     },
     searchArticle(val) {
@@ -133,12 +163,24 @@ export default {
       }
       this.getSearchValue(data)
     },
+    //加载更多
+    async Loadmore() {
+      this.page += 1
+      try {
+        if (this.isShow) {
+          let { list } = await getArticleList({ params: { size: this.size, page: this.page } })
+          this.articleList.push(...list)
+          if (this.articleList.length >= this.total) {
+            this.isShow = false
+            return false
+          }
+        }
+      } catch (error) {
+        this.$message.error(error)
+      }
+    }
+  },
 
-  },
-  computed: {
-    ...mapState("article", ["articleList"]),
-    ...mapGetters("article", ["sclieArticles"]),
-  },
   watch: {
     "$route.query.val"(val) {
       if (val) {
@@ -244,10 +286,12 @@ export default {
   width: 100%;
 
   .oButton {
-    background-image: linear-gradient(to right,
-        #f62d12 0%,
-        #f58c7e 50%,
-        #f62d12 100%);
+    background-image: linear-gradient(
+      to right,
+      #f62d12 0%,
+      #f58c7e 50%,
+      #f62d12 100%
+    );
     background-size: 200% auto;
     border-radius: 30px;
     border: 0;

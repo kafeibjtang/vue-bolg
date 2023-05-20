@@ -13,8 +13,8 @@ export const getPubKey = () => {
 }
 
 //获取文章列表
-export const getArticleList = () => {
-    return http.get('/api/rest/articles')
+export const getArticleList = (parmas) => {
+    return http.get(`/api/rest/articles`, parmas)
 }
 //获取文章详情
 export const getArticle = (data) => {
@@ -59,5 +59,5 @@ export const getUserInfo = () => {
 
 //修改用户信息
 export const putUser = (data) => {
-    return http.put("/userInfo",data)
+    return http.put("/userInfo", data)
 }

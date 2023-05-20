@@ -8,7 +8,12 @@
       <div class="columns-rad">
         <h4>文章分类：</h4>
         <el-radio-group v-model="checkList">
-          <el-radio :label="item.id" v-for="item in columns" :key="item.id" :name="item.name">
+          <el-radio
+            :label="item.id"
+            v-for="item in columns"
+            :key="item.id"
+            :name="item.name"
+          >
             {{ item.name }}
           </el-radio>
         </el-radio-group>
@@ -20,11 +25,7 @@
       </div>
     </div>
     <div class="editor">
-      <div class="editor-box">
-        <Toolbar style="border-bottom: 1px solid #f62d12" :editor="editor" :defaultConfig="toolbarConfig" :mode="mode" />
-        <Editor style="height: 500px; overflow-y: hidden" v-model="htmlData" :defaultConfig="editorConfig" :mode="mode"
-          @onCreated="onCreated" />
-      </div>
+      <div ref="Editor" class="editor-box typo"></div>
       <div class="editor-btn">
         <span class="oButton" @click="clearData">
           <i class="el-icon-delete-solid" style="margin-right: 10px"></i>
@@ -41,23 +42,19 @@
 </template>
 
 <script>
-import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
-import { getColumns, uploadArticle } from "@/api";
+import Editor from "wangeditor";
+import { getColumns, uploadArticle, getArticleList } from "@/api";
 import FooterVue from '@/components/Footer.vue';
 export default {
-  components: { Editor, Toolbar, FooterVue },
+  components: { FooterVue },
   data() {
     return {
       editor: null,
       htmlData: "",
-      toolbarConfig: {},
-      editorConfig: {
-        placeholder: "请输入内容...",
-      },
-      mode: "default", // or 'simple'
       columns: "",
       checkList: "641e613b45ad351b7c9d2b2d",
       titleData: "",
+      URL: 'http://111.230.17.116:3000/upload/article'
     };
   },
 
@@ -68,54 +65,57 @@ export default {
     }
     this.getColumnsList();
   },
+  mounted() {
+    this.editor = new Editor(this.$refs.Editor)
+    this.upload()
+    this.editor.create()
+  },
 
   methods: {
-    onCreated(editor) {
-      this.editor = Object.seal(editor);
-      let uploadImgConfig = editor.getMenuConfig("uploadImage");
-      uploadImgConfig.server = "http://127.0.0.1:3000/upload/article";
-      uploadImgConfig.uploadFileName = "file";
-      uploadImgConfig.headers = {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+    upload() {
+      this.editor.config.zIndex = 1
+      this.editor.config.uploadImgServer = this.URL
+      this.editor.config.uploadImgMaxSize = 5 * 1024 * 1024 // 5M
+      this.editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif', 'bmp']
+      this.editor.config.uploadImgMaxLength = 1
+      this.editor.config.uploadFileName = 'file'
+      this.editor.config.uploadImgHeaders = {
+        'Authorization': `Bearer ${sessionStorage.getItem("token")}`,
+      }
+      this.editor.config.menus = ['head', 'bold', 'fontSize', 'fontName', 'italic', 'underline', 'strikeThrough', 'indent', 'lineHeight', 'link', 'list', 'todo', 'justify', 'quote', 'code', 'splitLine', 'undo', 'redo', 'image',]
+      this.editor.config.uploadImgHooks = {
+        customInsert: function (insertImg, result, editor) {
+          insertImg(result.data.src);
+        }
       };
-      uploadImgConfig.timeout = 5 * 1000;
-      uploadImgConfig.customInsert = (res, insertFn) => {
-        insertFn(res.data.src);
-      };
-      uploadImgConfig.onSuccess = (file, res) => {
-        this.$message.success(`${file.name} 上传成功`);
-      };
-      uploadImgConfig.onError = (file, err, res) => {
-        this.$message.error(`${file.name} 上传出错，请检查是否登录`);
-      };
+    },
+    clearData() {
+      this.editor.txt.clear()
     },
 
     async getColumnsList() {
       try {
-        let { list } = await getColumns();
-        this.columns = list;
+        let data = await getColumns();
+        this.columns = data;
       } catch (error) {
         this.$message.error(err.response.data.message);
 
         return Promise.reject(error);
       }
     },
-    clearData() {
-      this.editor.clear();
-      this.titleData = "";
-      this.checkList = "";
-    },
+
     async submitEditer() {
-      let newContent = this.editor.getHtml().replace(/<img [^>]*src=['"]([^'"]+)[^>]*>/gi, function (match, reSrc) {
-        let newImg = `<img  src="${reSrc}" style="width:50%;" />`;
+      let newContent = this.editor.txt.html().replace(/<img [^>]*src=['"]([^'"]+)[^>]*>/gi, function (match, reSrc) {
+        let newImg = `<div style="display: flex;align-items: center;margin: 0 auto; ">
+            <img src=${reSrc} style="max-width: 800px; max-height: 300px;" />
+        </div>`;
         return newImg;
       });
       let data = {
         title: this.titleData,
-        content: this.editor.getText(),
+        content: this.editor.txt.text(),
         detailed: newContent,
         column: this.checkList,
-        cover: this.htmlData.match(/src="([^"']*)"/)?.[1],
         writer: sessionStorage.getItem("uid"),
       };
       if (!this.verificationContent(data)) {
@@ -123,7 +123,6 @@ export default {
       }
       await uploadArticle(data).then((res) => {
         this.$message.success("上传成功");
-        this.clearData();
         this.$router.push("/articles")
       }).catch((err) => {
         this.$message.error(err.response.data.message);
@@ -135,12 +134,10 @@ export default {
         title: "标题不能为空",
         content: "内容不能为空",
         column: "请选择分类",
-        cover: "请上传封面图",
       };
       let errData = Object.entries(data).filter(([key, value]) => {
         return !value || value.length === 0;
       })[0]?.[0]
-
       if (dataMap[errData]) {
         this.$message.error(dataMap[errData]);
         return false;
@@ -149,16 +146,18 @@ export default {
     },
   },
   beforeDestroy() {
-    const editor = this.editor;
-    if (editor == null) {
+    if (this.editor == null) {
       return false;
     }
-    editor.destroy(); // 组件销毁时，及时销毁编辑器
+    this.editor.destroy(); // 组件销毁时，及时销毁编辑器
+    this.editor = null
   },
 };
 </script>
-<style src="@wangeditor/editor/dist/css/style.css"></style>
+
 <style lang="less" scoped>
+@import url("../assets/style/typo.css");
+
 .article-data {
   flex: 6;
 
@@ -178,7 +177,7 @@ export default {
         position: absolute;
         bottom: -24px;
         left: 0;
-        width: 15%;
+        width: 10%;
         border-bottom: 4px solid #f56525;
         border-radius: 2px;
       }
@@ -224,10 +223,12 @@ export default {
     padding: 20px 20px 0 20px;
 
     .oButton {
-      background-image: linear-gradient(to right,
-          #f62d12 0%,
-          #f58c7e 50%,
-          #f62d12 100%);
+      background-image: linear-gradient(
+        to right,
+        #f62d12 0%,
+        #f58c7e 50%,
+        #f62d12 100%
+      );
       background-size: 200% auto;
       border-radius: 30px;
       border: 0;
@@ -250,10 +251,20 @@ export default {
     padding: 20px;
 
     .editor-box {
+      min-height: 500px;
+      border: none;
       border-top: 1px solid #f62d12;
       border-bottom: 1px solid #f62d12;
+
+      /deep/.w-e-toolbar {
+        border: none !important;
+      }
+
+      /deep/.w-e-text-container {
+        border: none !important;
+        height: 500px !important;
+      }
     }
   }
-
 }
 </style>

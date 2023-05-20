@@ -10,8 +10,8 @@
         <span><i class="el-icon-time"></i>{{ articleData.date }}</span>
         <span><i class="el-icon-document"></i>{{ articleData.column?.name }}</span>
       </div>
-      <div class="post-body">
-        <div v-html="articleData.detailed" class="post-detailed"></div>
+      <div class="post-body typo">
+        <div v-html="articleData.detailed" class="post-detailed typo" ref="detailed"></div>
         <div class="post-footer">
           <div class="post-footer-tags">
             <i class="el-icon-edit-outline" style="color: orangered; margin-right: 5px">
@@ -83,9 +83,8 @@ export default {
             this.likeNum = 0
             this.getArticleDetails(this.id)
           })
-        }, 10000)
+        }, 5000)
       } catch (error) {
-        console.log(error);
         return Promise.reject(error)
       }
 
@@ -109,6 +108,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import url("../assets/style/typo.css");
+
 .article-data {
   margin: 0 15px;
 
@@ -155,6 +156,13 @@ export default {
         Arial, sans-serif;
       text-indent: 2em;
       padding: 20px;
+
+      .post-detailed {
+        p {
+          width: 100%;
+          word-wrap: normal
+        }
+      }
     }
 
     .post-footer {

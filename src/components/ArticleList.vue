@@ -8,7 +8,7 @@
     >
       <router-link :to="{ name: 'Article', params: { id: article._id } }">
         <div class="article-img">
-          <img :src="article.cover" alt="文章图片" />
+          <img src="../assets/myblog.webp" alt="文章图片" />
           <span>{{ article.date }}</span>
         </div>
         <div class="arctile-content">
