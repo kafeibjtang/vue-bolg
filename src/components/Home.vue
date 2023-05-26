@@ -2,7 +2,7 @@
   <div class="about-container">
     <div class="container-left">
       <Header />
-      <el-card>
+      <el-card class="containerCaed">
         <router-view></router-view>
       </el-card>
     </div>
@@ -13,7 +13,7 @@
       </div>
     </div>
     <Dialog />
-    <div class="live">
+    <div class="live" v-if="$store.state.isMobile">
       <vueLive2d :size="350" />
     </div>
   </div>
@@ -75,16 +75,17 @@ export default {
 .about-container {
   display: flex;
   justify-content: space-between;
-  margin: 30px;
   position: relative;
+  margin: 0 auto;
+  margin-top: 30px;
+  max-width: 1850px;
 
   .container-left {
-    flex: 7;
-    max-width: 1450px;
+    flex: 1;
   }
 
   .container {
-    flex: 2;
+    margin-top: 15px;
   }
 }
 
@@ -98,11 +99,10 @@ export default {
 }
 
 .aside {
-  flex: 2;
   position: sticky;
-  top: 45px;
+  top: 35px;
   left: 0;
-  height: fit-content;
+  width: 350px;
 }
 
 .live {

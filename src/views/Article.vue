@@ -111,6 +111,7 @@ export default {
 @import url("../assets/style/typo.css");
 
 .article-data {
+  max-width: 1468px;
   margin: 0 15px;
 
   .active {
@@ -156,6 +157,7 @@ export default {
         Arial, sans-serif;
       text-indent: 2em;
       padding: 20px;
+      overflow: hidden;
 
       .post-detailed {
         p {

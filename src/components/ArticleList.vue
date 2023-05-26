@@ -4,7 +4,7 @@
       class="box-card"
       v-for="article in articleslist"
       :key="article._id"
-      :style="{ 'max-width': maxWidth ? maxWidth : '255px' }"
+      :style="{ 'max-width': maxWidth ? maxWidth : '273px' }"
     >
       <router-link :to="{ name: 'Article', params: { id: article._id } }">
         <div class="article-img">
@@ -37,7 +37,6 @@ export default {
   flex-wrap: wrap;
 
   .box-card {
-    flex: 1;
     margin: 5px;
     border-radius: 10px;
     cursor: pointer;
@@ -45,8 +44,7 @@ export default {
     background-color: #f8fafb;
     min-width: 255px;
     max-width: 255px;
-    max-height: 400px;
-    min-height: 400px;
+    height: 400px;
 
     a {
       color: #44566c;
@@ -79,13 +77,13 @@ export default {
     .arctile-content {
       h1 {
         padding: 5px;
-        font-size: 20px;
+        font-size: 18px;
+        font-weight: 700;
       }
 
       p {
-        padding: 10px;
+        padding: 0 10px;
         font-size: 14px;
-        height: 150px;
         display: -webkit-box;
         -webkit-line-clamp: 7;
         -webkit-box-orient: vertical;

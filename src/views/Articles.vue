@@ -7,39 +7,29 @@
     <div class="articles-colunm">
       <div class="articles-colunm-tabs">
         <div class="articles-colunm-list">
-          <span @click="getArticlesList" :class="{ 'tabs-active': idx === '1' }"
-            >全部</span
-          >
+          <span @click="getArticlesList" :class="{ 'tabs-active': idx === '1' }">全部</span>
           <ul>
-            <li
-              v-for="item in columns"
-              :class="{ 'tabs-active': item.id === idx }"
-              :key="item.id"
-              @click="columnList(item.id)"
-            >
+            <li v-for="item in columns" :class="{ 'tabs-active': item.id === idx }" :key="item.id"
+              @click="columnList(item.id)">
               {{ item.name }}
             </li>
           </ul>
         </div>
         <el-button type="primary" icon="el-icon-plus" round @click="addColumns">
-          添加分类</el-button
-        >
+          添加分类</el-button>
       </div>
       <div class="articles-colunm-content">
         <div v-if="articleList.length === 0" class="listBoxShow">
           当前分类没有文章
-          <router-link
-            :to="{
+          <router-link :to="{
               name: 'Compiler',
               params: {
                 id: idx,
               },
-            }"
-            >去写一篇</router-link
-          >
+            }">去写一篇</router-link>
           吗？
         </div>
-        <ArticleList v-else :articleslist="articleList" :maxWidth="'280px'" />
+        <ArticleList v-else :articleslist="articleList" :maxWidth="'273px'" />
       </div>
       <div v-if="idx === '1'" class="load-btn" @click="Loadmore">
         <span class="oButton" v-if="isShow">
@@ -286,12 +276,10 @@ export default {
   width: 100%;
 
   .oButton {
-    background-image: linear-gradient(
-      to right,
-      #f62d12 0%,
-      #f58c7e 50%,
-      #f62d12 100%
-    );
+    background-image: linear-gradient(to right,
+        #f62d12 0%,
+        #f58c7e 50%,
+        #f62d12 100%);
     background-size: 200% auto;
     border-radius: 30px;
     border: 0;

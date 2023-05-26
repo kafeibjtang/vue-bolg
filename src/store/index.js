@@ -10,6 +10,7 @@ export default new Vuex.Store({
   state: {
     isLogin: false,
     nickname: sessionStorage.getItem('nickname') || undefined,
+    isMobile:false
   },
   getters: {
   },
@@ -22,6 +23,9 @@ export default new Vuex.Store({
       sessionStorage.clear()
       state.isLogin = false
       state.nickname = ""
+    },
+    ISMOBILE(state, data) {
+      state.isMobile = data
     }
   },
   actions: {

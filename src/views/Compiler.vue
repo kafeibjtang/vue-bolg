@@ -8,12 +8,7 @@
       <div class="columns-rad">
         <h4>文章分类：</h4>
         <el-radio-group v-model="checkList">
-          <el-radio
-            :label="item.id"
-            v-for="item in columns"
-            :key="item.id"
-            :name="item.name"
-          >
+          <el-radio :label="item.id" v-for="item in columns" :key="item.id" :name="item.name">
             {{ item.name }}
           </el-radio>
         </el-radio-group>
@@ -54,7 +49,7 @@ export default {
       columns: "",
       checkList: "641e613b45ad351b7c9d2b2d",
       titleData: "",
-      URL: 'http://111.230.17.116:3000/upload/article'
+      URL: 'http://111.230.17.116:3001/upload/article'
     };
   },
 
@@ -106,9 +101,7 @@ export default {
 
     async submitEditer() {
       let newContent = this.editor.txt.html().replace(/<img [^>]*src=['"]([^'"]+)[^>]*>/gi, function (match, reSrc) {
-        let newImg = `<div style="display: flex;align-items: center;margin: 0 auto; ">
-            <img src=${reSrc} style="max-width: 800px; max-height: 300px;" />
-        </div>`;
+        let newImg = ` <img src=${reSrc}  />`;
         return newImg;
       });
       let data = {
@@ -223,12 +216,10 @@ export default {
     padding: 20px 20px 0 20px;
 
     .oButton {
-      background-image: linear-gradient(
-        to right,
-        #f62d12 0%,
-        #f58c7e 50%,
-        #f62d12 100%
-      );
+      background-image: linear-gradient(to right,
+          #f62d12 0%,
+          #f58c7e 50%,
+          #f62d12 100%);
       background-size: 200% auto;
       border-radius: 30px;
       border: 0;

@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { Message } from "element-ui"
-
 Vue.use(VueRouter)
 //重写路由push方法，捕获重定向路由错误
 const originalPush = VueRouter.prototype.push;
@@ -28,7 +26,7 @@ const routes = [
     component: () => import("@/views/Articles"),
     meta: {
       title: "Mr.Xiao | 文章列表",
-      search:""
+      search: ""
     }
   },
   {
@@ -45,6 +43,13 @@ const routes = [
     component: () => import("@/views/Compiler"),
     meta: {
       title: "Mr.Xiao | 文章编辑"
+    },
+    beforeEnter: (to, from, next) => {
+      let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+      if (flag) {
+        next(from.path);
+      }
+      next()
     }
   },
   {
@@ -53,6 +58,13 @@ const routes = [
     component: () => import("@/views/Socket"),
     meta: {
       title: "Mr.Xiao | 聊天室"
+    },
+    beforeEnter: (to, from, next) => {
+      let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+      if (flag) {
+        next(from.path);
+      }
+      next()
     }
   },
   {
@@ -62,7 +74,7 @@ const routes = [
     meta: {
       title: "Mr.Xiao | 个人中心"
     }
-  },
+  }
 ]
 
 
@@ -70,18 +82,6 @@ const router = new VueRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  if (to.path === "/compiler") {
-    let token = sessionStorage.getItem("token")
-    if (!token) {
-      Message.warning("登录后才能发表文章哦~")
-    }
-  }
-  next()
-})
 
-router.afterEach((to, from) => {
-  document.title = to.meta.title
-})
 
 export default router
