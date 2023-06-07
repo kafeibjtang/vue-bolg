@@ -151,6 +151,15 @@ export default {
 <style lang="less" scoped>
 @import url("../assets/style/typo.css");
 
+/deep/.el-radio,
+/deep/.el-radio__inner,
+/deep/.w-e-menu {
+  &:hover {
+    cursor: url(../assets/a2.png), pointer;
+  }
+
+}
+
 .article-data {
   flex: 6;
 

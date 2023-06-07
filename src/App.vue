@@ -1,6 +1,7 @@
 <template>
   <div id="app" class="page-component__scroll el-scrollbar__wrap">
     <Home />
+
     <el-backtop target="#app" :bottom="100" :right="400">
       <div class="backtop">
         <svg
@@ -26,23 +27,53 @@
 
 <script>
 import Home from "./components/Home.vue";
+import petal from "@/util/petal"
+import Effect from "@/util/effects"
 export default {
   components: {
     Home
   },
+  data() {
+    return {
+      pf: null,
+      effect: null
+    }
+  },
   created() {
     this.isMobile() ? this.$store.commit("ISMOBILE", false) : this.$store.commit("ISMOBILE", true)
+  },
+  mounted() {
+    /* 鼠标点击特效 */
+    $("html").click(this.addEffects);
+    /*花瓣特效*/
+    this.pf = petal.execute()
   },
   methods: {
     isMobile() {
       return navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+    },
+    addEffects(e) {
+      this.effect = new Effect(e)
     }
+  },
+  beforeDestroy() {
+    this.pf = null
+    this.effect = null
   }
 };
 </script>
 
 <style  lang="less">
 @import url("./assets/style/mSty.css");
+
+body {
+  cursor: url(../src/assets/a1.png), pointer;
+}
+
+a:hover {
+  cursor: url(../src/assets/a2.png), pointer;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -70,6 +101,17 @@ html {
 
 a {
   text-decoration: none;
+}
+
+.oButton,
+.userInfo-set,
+.el-button,
+.more-message,
+.colums,
+.box-card {
+  &:hover {
+    cursor: url(../src/assets/a2.png), pointer !important;
+  }
 }
 
 .page-component__scroll,
@@ -105,6 +147,11 @@ a {
     line-height: 40px;
     color: #1989fa;
     border-radius: 50%;
+
+    &,
+    :hover {
+      cursor: url(../src/assets/a2.png), pointer;
+    }
   }
 }
 </style>

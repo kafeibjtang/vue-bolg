@@ -4,7 +4,7 @@
       <h1>文章详情</h1>
       <span class="sub-separate">BlogView </span>
     </div>
-    <div class="post-box">
+    <div class="post-box" v-loading="loading">
       <h1 class="post-title">{{ articleData.title }}</h1>
       <div class="post-time">
         <span><i class="el-icon-time"></i>{{ articleData.date }}</span>
@@ -52,7 +52,8 @@ export default {
       id: "",
       isLike: false,
       time: null,
-      likeNum: 0
+      likeNum: 0,
+      loading: false
     };
   },
   components: { Comments, Footer },
@@ -62,8 +63,10 @@ export default {
   },
   methods: {
     async getArticleDetails(id) {
+      this.loading = true
       try {
         this.articleData = await getArticle(id);
+        this.loading = false
         let uid = sessionStorage.getItem("uid")
         this.isLike = this.articleData.like_users?.includes(uid)
       } catch (error) {

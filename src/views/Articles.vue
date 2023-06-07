@@ -7,9 +7,9 @@
     <div class="articles-colunm">
       <div class="articles-colunm-tabs">
         <div class="articles-colunm-list">
-          <span @click="getArticlesList" :class="{ 'tabs-active': idx === '1' }">全部</span>
+          <span @click="getArticlesList" class="colums" :class="{ 'tabs-active': idx === '1' }">全部</span>
           <ul>
-            <li v-for="item in columns" :class="{ 'tabs-active': item.id === idx }" :key="item.id"
+            <li v-for="item in columns" class="colums" :class="{ 'tabs-active': item.id === idx }" :key="item.id"
               @click="columnList(item.id)">
               {{ item.name }}
             </li>
@@ -18,7 +18,7 @@
         <el-button type="primary" icon="el-icon-plus" round @click="addColumns">
           添加分类</el-button>
       </div>
-      <div class="articles-colunm-content">
+      <div class="articles-colunm-content" v-loading="loading">
         <div v-if="articleList.length === 0" class="listBoxShow">
           当前分类没有文章
           <router-link :to="{
@@ -58,7 +58,8 @@ export default {
       articleList: [],
       size: 10,
       page: 1,
-      total: 10
+      total: 10,
+      loading: true,
     };
   },
   components: {
@@ -98,18 +99,22 @@ export default {
     //获取当前分类的文章列表
     async columnList(id) {
       this.idx = id
+      this.loading = true;
       try {
         let { aids } = await getcolumnList(id)
         this.articleList = aids
         this.page = 1
         this.size = 10
         this.isShow = true
+        this.loading = false;
       } catch (error) {
-        this.$message.error(error)
+        this.loading = false;
+        this.$message.error("文章获取失败")
       }
     },
     //获取全部文章
     async getArticlesList() {
+      this.loading = true
       try {
         let data = await getArticleList({ params: { size: this.size, page: this.page } })
         this.articleList = data.list
@@ -117,8 +122,11 @@ export default {
         this.size = 10
         this.total = data.total
         this.idx = "1"
+        this.loading = false
+
       } catch (error) {
-        this.$message.error(error)
+        this.loading = false
+        this.$message.error("文章获取失败")
       }
     },
     //添加分类
@@ -137,10 +145,12 @@ export default {
       if (!this.isShow) {
         this.isShow = true
       }
+      this.loading = true
       await getSearchData(qs.stringify(data)).then((res) => {
         this.page = 1
         this.size = 10
         this.articleList = res.list
+        this.loading = false
       })
     },
     searchArticle(val) {
@@ -155,18 +165,24 @@ export default {
     },
     //加载更多
     async Loadmore() {
+      this.loading = true
       this.page += 1
       try {
         if (this.isShow) {
           let { list } = await getArticleList({ params: { size: this.size, page: this.page } })
           this.articleList.push(...list)
+          this.loading = false
           if (this.articleList.length >= this.total) {
             this.isShow = false
+            this.loading = false
             return false
           }
         }
+        this.loading = false
       } catch (error) {
         this.$message.error(error)
+        this.loading = false
+
       }
     }
   },

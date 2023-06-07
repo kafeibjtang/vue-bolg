@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Dialog, Card, Tabs, TabPane, Menu, MenuItem, Form, FormItem, Button, Input, Message, Backtop, Checkbox, Radio, RadioGroup, Upload ,Tooltip} from "element-ui"
+import { Dialog, Card, Tabs, TabPane, Menu, MenuItem, Form, FormItem, Button, Input, Message, Backtop, Checkbox, Radio, RadioGroup, Upload ,Tooltip,Loading} from "element-ui"
 
 Vue.use(Dialog)
 Vue.use(Card)
@@ -17,5 +17,6 @@ Vue.use(Radio)
 Vue.use(RadioGroup)
 Vue.use(Upload)
 Vue.use(Tooltip)
+Vue.use(Loading)
 Vue.prototype.$message = Message
 

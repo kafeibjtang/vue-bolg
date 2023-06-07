@@ -1,38 +1,14 @@
 <template>
-  <el-dialog
-    :title="title"
-    :visible.sync="isShow"
-    width="30%"
-    :before-close="close"
-  >
-    <el-form
-      :ref="type"
-      :model="formList"
-      :rules="rulesForm"
-      label-width="80px"
-    >
-      <el-form-item
-        v-for="item in formData"
-        :key="item.query"
-        :label="item.label"
-        :prop="item.query"
-      >
-        <el-input
-          v-model="formList[item.query]"
-          :type="item.type"
-          :name="item.query"
-          :placeholder="item.placeholder"
-        ></el-input>
+  <el-dialog :title="title" :visible.sync="isShow" width="30%" :before-close="close">
+    <el-form :ref="type" :model="formList" :rules="rulesForm" label-width="80px">
+      <el-form-item v-for="item in formData" :key="item.query" :label="item.label" :prop="item.query">
+        <el-input v-model="formList[item.query]" :type="item.type" :name="item.query" :placeholder="item.placeholder"
+          :show-password="item.query === 'password' ? true : false"></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button
-        v-for="btn in btns"
-        :key="btn.targetName"
-        type="primary"
-        @click="handlerBtn(btn.targetName, btn.isSubmit)"
-        >{{ btn.name }}</el-button
-      >
+      <el-button v-for="btn in btns" :key="btn.targetName" type="primary"
+        @click="handlerBtn(btn.targetName, btn.isSubmit)">{{ btn.name }}</el-button>
     </span>
   </el-dialog>
 </template>
@@ -42,6 +18,7 @@ import Modal from "./config/LoginConfig";
 import Form from "./config/Form";
 import { mapState } from "vuex";
 import { addColumnsList } from "@/api"
+
 
 export default {
   data() {

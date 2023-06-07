@@ -1,6 +1,8 @@
 import axios from "axios";
 import JSEncrypt from "jsencrypt";
-import { Message } from "element-ui";
+import {
+    Message
+} from "element-ui";
 
 const http = axios.create({
     baseURL: 'http://111.230.17.116:3001/',
@@ -13,7 +15,6 @@ const EncryptMap = {
 }
 
 http.interceptors.request.use(async (config) => {
-
     if (config.url === EncryptMap[config.url]) {
         let key = sessionStorage.getItem("pubKey")
         let encrypt = new JSEncrypt()
@@ -34,6 +35,7 @@ http.interceptors.request.use(async (config) => {
 
 
 http.interceptors.response.use(res => {
+
     let result = res.data
     if (result.data?.token) {
         let token = result.data.token.token
